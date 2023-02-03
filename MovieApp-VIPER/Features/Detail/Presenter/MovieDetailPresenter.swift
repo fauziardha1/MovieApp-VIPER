@@ -20,8 +20,9 @@ class MovieDetailPresenter : MovieDetailPresenterContract{
         self.router = router
         self.currentMovieID = currentMovieID
         
-        self.interactor?.fetchMovieDetail()
-        self.interactor?.fetchMovieReviews()
+        self.interactor?.fetchMovieDetail(currentMovieID!)
+        self.interactor?.fetchMovieReviews(currentMovieID!)
+        self.interactor?.fetchMovieTrailer(currentMovieID!)
     }
     
     func interactorDidFetchMovieDetail(with result: Result<MovieDetail, Error>) {
@@ -42,17 +43,35 @@ class MovieDetailPresenter : MovieDetailPresenterContract{
         }
     }
     
-    func fetchMovieDetail(_ genreID: String) {
-        self.interactor?.fetchMovieDetail()
+    func interactorDidFetchMovieTrailer(with result: Result<MovieVideo, Error>) {
+        switch result{
+        case .success(let data):
+            var key : String = ""
+            for movie in data.results! {
+                if movie.type == "Trailer"{
+                    key = movie.key!
+                    break
+                }
+            }
+            self.view?.viewUpdateMovieTrailer(with: key)
+            
+        case .failure(let error):
+            self.view?.viewUpdate(with: "Something went wrong: \(error.localizedDescription)")
+        }
+    }
+    
+    func fetchMovieTrailer(_ movieID: Int) {
+        self.interactor?.fetchMovieTrailer(movieID)
+    }
+    
+    func fetchMovieDetail(_ movieID: String) {
+        self.interactor?.fetchMovieDetail(Int(movieID) ?? self.currentMovieID!)
     }
     
     func fetchMovieReviews(_ movieID: Int) {
-        self.interactor?.fetchMovieReviews()
+        self.interactor?.fetchMovieReviews(movieID)
     }
     
-    func getCurrentMovieID() -> Int {
-        self.currentMovieID ?? 0
-    }
     
     
 }

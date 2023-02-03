@@ -44,7 +44,7 @@ class ListGenrePresenter : ListGenrePresenterContract{
         case .success(let movies):
             self.view?.viewUpdateCardMovies(with: movies)
         case .failure(let error):
-            self.view?.viewUpdateCardMovies(with: "Something went wrong \(error.localizedDescription)")
+            self.view?.viewUpdateCardMovies(with: "Something went wrong\n \(error.localizedDescription)")
         }
     }
     

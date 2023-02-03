@@ -47,7 +47,7 @@ class ListGenreInteractor : ListGenreInteractorContract{
             
             do {
                 let entities = try JSONDecoder().decode(DiscoverMovies.self, from: data)
-                self?.presenter?.interactorDidFetchDiscoverMovies(with: .success(entities.results))
+                self?.presenter?.interactorDidFetchDiscoverMovies(with: .success(entities.results!))
                 
             } catch {
                 self?.presenter?.interactorDidFetchDiscoverMovies(with: .failure(error))

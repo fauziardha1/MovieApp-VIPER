@@ -43,3 +43,5 @@ extension UIImageView {
         }
     }
 }
+
+let imageBaseURL : String = "https://image.tmdb.org/t/p/w500"

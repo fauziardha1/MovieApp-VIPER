@@ -8,42 +8,50 @@
 import Foundation
 
 protocol MovieDetailViewContract {
-//    var presenter : MovieDetailPresenter? {get set}
-    
+    // function to update detail information of current movie
     func viewUpdate(with result: MovieDetail)
+    
+    // function to shows error message when there is a mistake was happen
     func viewUpdate(with error: String)
     
+    // function to update reviews list of the movie
     func viewUpdateReview(with result: MovieReview)
+    
+    // function to get movie trailer url
+    func viewUpdateMovieTrailer(with result: String)
 }
 
 protocol MovieDetailInteractorContract {
-    func fetchMovieDetail()
-    func fetchMovieReviews()
+    // function to get movie detail
+    func fetchMovieDetail(_ movieID: Int)
+    
+    // function to get movie reviews
+    func fetchMovieReviews(_ movieID: Int)
+    
+    // function to get movie trailer
+    func fetchMovieTrailer(_ movieID: Int)
 }
 
 protocol MovieDetailPresenterContract {
-//    weak var view : ListGenreViewContract? {get set}
-//    weak var interactor : ListGenreInteractorContract? {get set}
-//    weak var router : ListGenreRouterContract? {get set}
-    
     // on interactor did something
     func interactorDidFetchMovieDetail(with result : Result<MovieDetail,Error>)
     
     // on interactor did fetch discover movies
     func interactorDidFetcMovieReviews(with result: Result<MovieReview, Error>)
     
+    // when interactor did fetch movie's trailer
+    func interactorDidFetchMovieTrailer(with result: Result<MovieVideo, Error>)
+    
     // action that can triggered by view
     func fetchMovieDetail(_ genreID: String)
     
-    //
+    // function to get movies reviews
     func fetchMovieReviews(_ movieID: Int)
     
-    // get currentmovieid
-    func getCurrentMovieID() -> Int
+    // function to get movie trailer
+    func fetchMovieTrailer(_ movieID: Int)
 }
 
-// just router
+//  router contract to navigate the current view
 protocol MovieDetailRouterContract {
-    // navigate to detail page
-//    func navigateToDetailPage()
 }

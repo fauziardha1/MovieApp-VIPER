@@ -137,6 +137,7 @@ class ListGenreView : UIViewController, ListGenreViewContract{
         self.movies = result
         DispatchQueue.main.async {
             self.textError.isHidden = true
+            self.collectionView.isHidden = false
             self.collectionView.reloadData()
         }
     }
@@ -145,6 +146,7 @@ class ListGenreView : UIViewController, ListGenreViewContract{
         DispatchQueue.main.async {
             self.textError.text = error
             self.textError.isHidden = false
+            self.collectionView.isHidden = true
         }
     }
     
@@ -183,7 +185,6 @@ struct ViewControllerPreview: UIViewControllerRepresentable {
 
 extension ListGenreView :  UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("count item movies:", self.movies.count)
         return self.movies.count
     }
     
@@ -191,7 +192,7 @@ extension ListGenreView :  UICollectionViewDelegate, UICollectionViewDataSource,
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCard.identifier, for: indexPath) as! MovieCard
         
         cell.movieName.text = self.movies[indexPath.row].title
-        cell.imageView.load(url: URL(string: imageBaseUrl + self.movies[indexPath.row].posterPath)!)
+        cell.imageView.load(url: URL(string: imageBaseUrl + self.movies[indexPath.row].posterPath!)!)
         
         return cell
     }
