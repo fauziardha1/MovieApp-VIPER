@@ -8,29 +8,12 @@
 import Foundation
 import UIKit
 
-// contract for ListGenre View
-// it has reference to presenter
-// it has method to update view
-
-// contract
-protocol ListGenreViewContract : AnyObject{
-    // reference to presenter
-//    var presenter : ListGenrePresenterContract? {get set}
-    
-    // method for updating view
-    func viewUpdate(with result : [Genre]) // with data
-    func viewUpdate(with error: String) // with error message
-    
-    func viewUpdateCardMovies(with result: [Movie])
-    func viewUpdateCardMovies(with error: String)
-}
-
-
 class ListGenreView : UIViewController, ListGenreViewContract{
     var presenter : ListGenrePresenterContract?
     private var selectedGenre = "⋯All"
     private var genres = [Genre]()
     private var movies = [Movie]()
+    private var page : Int = 1
     
     private lazy var stackView: UIStackView = {
             let stackView = UIStackView()
@@ -51,6 +34,7 @@ class ListGenreView : UIViewController, ListGenreViewContract{
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = ""
         label.numberOfLines = 0
+        label.textColor = .white
         label.isHidden = true
         
         return label
@@ -116,7 +100,7 @@ class ListGenreView : UIViewController, ListGenreViewContract{
             textError.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             textError.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            uiScrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100 ),
+            uiScrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150 ),
             uiScrollView.leftAnchor.constraint(equalTo: view.leftAnchor,constant: 12),
             uiScrollView.rightAnchor.constraint(equalTo: view.rightAnchor),
             uiScrollView.heightAnchor.constraint(equalToConstant: 50),
@@ -136,15 +120,14 @@ class ListGenreView : UIViewController, ListGenreViewContract{
     
     func viewUpdate(with result: [Genre]) {
         self.genres = result
-        
+        self.page = 1
         DispatchQueue.main.async {
+            self.textError.isHidden = true
             self.addButtonToScrollView(self.genres)
         }
     }
     
     func viewUpdate(with error: String) {
-        print(error)
-        // update view
         DispatchQueue.main.async {
             self.textError.text = error
             self.textError.isHidden = false
@@ -152,15 +135,10 @@ class ListGenreView : UIViewController, ListGenreViewContract{
     }
     
     func viewUpdateCardMovies(with result: [Movie]) {
-        var str = ""
-        for movie in result {
-            str += movie.title + "\n"
-        }
-        
         self.movies = result
         DispatchQueue.main.async {
-            self.textError.text = str
-            self.textError.isHidden = false
+            self.textError.isHidden = true
+            self.collectionView.isHidden = false
             self.collectionView.reloadData()
         }
     }
@@ -169,6 +147,15 @@ class ListGenreView : UIViewController, ListGenreViewContract{
         DispatchQueue.main.async {
             self.textError.text = error
             self.textError.isHidden = false
+            self.collectionView.isHidden = true
+        }
+    }
+    
+    func viewApppendCardMovies(with result: [Movie]) {
+        self.movies += result
+        self.page += 1
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
         }
     }
     
@@ -205,10 +192,8 @@ struct ViewControllerPreview: UIViewControllerRepresentable {
 #endif
 
 
-extension ListGenreView :  UICollectionViewDelegate, UICollectionViewDataSource,
-                           UICollectionViewDelegateFlowLayout{
+extension ListGenreView :  UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("count item movies:", self.movies.count)
         return self.movies.count
     }
     
@@ -216,7 +201,7 @@ extension ListGenreView :  UICollectionViewDelegate, UICollectionViewDataSource,
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MovieCard.identifier, for: indexPath) as! MovieCard
         
         cell.movieName.text = self.movies[indexPath.row].title
-        cell.imageView.load(url: URL(string: imageBaseUrl + self.movies[indexPath.row].posterPath)!)
+        cell.imageView.load(url: URL(string: imageBaseUrl + self.movies[indexPath.row].posterPath!)!)
         
         return cell
     }
@@ -240,5 +225,14 @@ extension ListGenreView :  UICollectionViewDelegate, UICollectionViewDataSource,
         return 12
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.presenter?.selectedMovieID = movies[indexPath.row].id
+        self.presenter?.goToDetailPage()
+    }
     
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == self.movies.count - 1  {
+            self.presenter?.loadMoreDiscoverMovie(self.selectedGenre, self.page + 1)
+        }
+    }
 }
