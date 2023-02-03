@@ -20,8 +20,14 @@ protocol ListGenreViewContract : AnyObject{
     func viewUpdate(with result : [Genre]) // with data
     func viewUpdate(with error: String) // with error message
     
+    // function to udpate movie's cards when success
     func viewUpdateCardMovies(with result: [Movie])
+    
+    // function to udpate movie's cards when success
     func viewUpdateCardMovies(with error: String)
+    
+    // function to append data to movie's card, so its like endless scrolling
+    func viewApppendCardMovies(with result: [Movie])
 }
 
 // contract for interactor
@@ -37,6 +43,9 @@ protocol ListGenreInteractorContract {
     
     // get list of discover movies
     func getDiscoverMovies(_ genreID: String)
+    
+    // function to load more movies
+    func loadMoreDiscoverMovies(_ genreID: String, _ page: Int)
 }
 
 // contract
@@ -62,6 +71,12 @@ protocol ListGenrePresenterContract {
     func goToDetailPage()
     
     var selectedMovieID: Int? {get set}
+    
+    // function to append movies card
+    func loadMoreDiscoverMovie(_ genreID: String, _ page: Int)
+    
+    // function to trigger when success load more discover movie
+    func interactorDidLoadMoreDiscoverMovies(with result: Result<[Movie], Error>)
 }
 
 typealias entryView = ListGenreViewContract & UIViewController

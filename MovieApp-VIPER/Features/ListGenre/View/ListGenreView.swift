@@ -13,6 +13,7 @@ class ListGenreView : UIViewController, ListGenreViewContract{
     private var selectedGenre = "⋯All"
     private var genres = [Genre]()
     private var movies = [Movie]()
+    private var page : Int = 1
     
     private lazy var stackView: UIStackView = {
             let stackView = UIStackView()
@@ -119,7 +120,7 @@ class ListGenreView : UIViewController, ListGenreViewContract{
     
     func viewUpdate(with result: [Genre]) {
         self.genres = result
-        
+        self.page = 1
         DispatchQueue.main.async {
             self.textError.isHidden = true
             self.addButtonToScrollView(self.genres)
@@ -147,6 +148,14 @@ class ListGenreView : UIViewController, ListGenreViewContract{
             self.textError.text = error
             self.textError.isHidden = false
             self.collectionView.isHidden = true
+        }
+    }
+    
+    func viewApppendCardMovies(with result: [Movie]) {
+        self.movies += result
+        self.page += 1
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
         }
     }
     
@@ -221,5 +230,9 @@ extension ListGenreView :  UICollectionViewDelegate, UICollectionViewDataSource,
         self.presenter?.goToDetailPage()
     }
     
-    
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == self.movies.count - 1  {
+            self.presenter?.loadMoreDiscoverMovie(self.selectedGenre, self.page + 1)
+        }
+    }
 }

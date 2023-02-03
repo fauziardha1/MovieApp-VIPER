@@ -52,4 +52,18 @@ class ListGenrePresenter : ListGenrePresenterContract{
         self.router?.navigateToDetailPage(self.selectedMovieID)
     }
     
+    func loadMoreDiscoverMovie(_ genreID: String, _ page: Int = 1) {
+        self.interactor?.loadMoreDiscoverMovies(genreID == "⋯All" ? "" : genreID, page)
+    }
+    
+    func interactorDidLoadMoreDiscoverMovies(with result: Result<[Movie], Error>) {
+        switch result {
+        case .success(let movies):
+            self.view?.viewApppendCardMovies(with: movies)
+        case .failure(let error):
+            self.view?.viewUpdate(with: "Something went wrong\n \(error.localizedDescription)")
+        }
+    }
+    
+    
 }
