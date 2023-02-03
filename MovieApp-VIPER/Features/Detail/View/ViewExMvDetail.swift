@@ -39,7 +39,7 @@ extension MovieDetailView{
         self.movieTitle.text =  "Title"
     }
     
-    func setText(_ movieDetail : MovieDetail){ // TODO update content
+    func setText(_ movieDetail : MovieDetail){
         // set duration
         self.movieDuration.text = String((movieDetail.runtime)!) + " minutes"
         
@@ -53,7 +53,7 @@ extension MovieDetailView{
     // Function buttonPressed to play trailer video from youtube
     @objc func buttonPressed(){
         let player : YouTubePlayer = YouTubePlayer(
-            source: .video(id: self.trailerID), // TODO: change url of video to play (video id)
+            source: .video(id: self.trailerID),
             configuration: .init(
                 autoPlay: true
             )
@@ -122,13 +122,6 @@ extension MovieDetailView : UITableViewDataSource, UITableViewDelegate{
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if indexPath.row == self.reviews.count - 1 && vm.getConnectionStatus() {
-//            vm.setNextPageReview()
-//            vm.getMovieReviewsFromAPI(id: self.movieID!){
-//                self.reviews.append(contentsOf: self.vm.getReviews())
-//                self.tableview.reloadData()
-//            }
-//        }
     }
 
     

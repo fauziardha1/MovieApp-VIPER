@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+// class AdaptableSizeButton is a extens of UIButton class to enable dynamic with of button
 class AdaptableSizeButton: UIButton {
     override var intrinsicContentSize: CGSize {
         let labelSize = titleLabel?.sizeThatFits(CGSize(width: frame.size.width, height: CGFloat.greatestFiniteMagnitude)) ?? .zero

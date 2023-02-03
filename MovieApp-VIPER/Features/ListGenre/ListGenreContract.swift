@@ -8,14 +8,8 @@
 import Foundation
 import UIKit
 
-// contract for ListGenre View
-// it has reference to presenter
-// it has method to update view
-// contract
+// view contract is a contract for a view to get updated data from other layers
 protocol ListGenreViewContract : AnyObject{
-    // reference to presenter
-//    var presenter : ListGenrePresenterContract? {get set}
-    
     // method for updating view
     func viewUpdate(with result : [Genre]) // with data
     func viewUpdate(with error: String) // with error message
@@ -30,14 +24,8 @@ protocol ListGenreViewContract : AnyObject{
     func viewApppendCardMovies(with result: [Movie])
 }
 
-// contract for interactor
-// reference to presenter to trigger presenter when some usecase was done
-// set all usecase needed
-
+// interactor contract is a contract for interaction to outside the app
 protocol ListGenreInteractorContract {
-    // reference to presenter
-//     var presenter : ListGenrePresenterContract? {get set}
-    
     // get list of genre
     func getGenres()
     
@@ -48,16 +36,8 @@ protocol ListGenreInteractorContract {
     func loadMoreDiscoverMovies(_ genreID: String, _ page: Int)
 }
 
-// contract
-// reference to view
-// reference to interactor
-// reference to router
-
+// presenter contract as center of controll from the feature
 protocol ListGenrePresenterContract {
-//    weak var view : ListGenreViewContract? {get set}
-//    weak var interactor : ListGenreInteractorContract? {get set}
-//    weak var router : ListGenreRouterContract? {get set}
-    
     // on interactor did something
     func interactorDidFetchGenres(with result : Result<[Genre],Error>)
     
@@ -79,9 +59,7 @@ protocol ListGenrePresenterContract {
     func interactorDidLoadMoreDiscoverMovies(with result: Result<[Movie], Error>)
 }
 
-typealias entryView = ListGenreViewContract & UIViewController
-
-// just router
+//  router contract to navigate this page to other page
 protocol ListGenreRouterContract {
     // navigate to detail page
     func navigateToDetailPage(_ movieID: Int?)

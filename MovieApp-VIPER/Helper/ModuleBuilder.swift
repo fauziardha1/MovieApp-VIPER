@@ -8,10 +8,11 @@
 import Foundation
 import UIKit
 
-
+// Class Module Builder used for prepare the features
 class ModuleBuilder {
     static let shared = ModuleBuilder()
     
+    // funtion to prepare ListGenre and Movie List Feature
     func createListGenreAndMoviesViewController() -> ListGenreView {
         let view = ListGenreView()
         let router = ListGenreRouter()
@@ -25,6 +26,7 @@ class ModuleBuilder {
         return view
     }
     
+    // function to prepare the MovieDetail Feature
     func createMovieDetailViewController(_ movieID: Int = 0) -> MovieDetailView {
         let view = MovieDetailView()
         let router = MovieDetailRouter()
