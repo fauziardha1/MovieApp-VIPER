@@ -7,35 +7,21 @@
 
 import Foundation
 
-// contract
-// reference to view
-// reference to interactor
-// reference to router
-
-protocol ListGenrePresenterContract {
-//    weak var view : ListGenreViewContract? {get set}
-//    weak var interactor : ListGenreInteractorContract? {get set}
-//    weak var router : ListGenreRouterContract? {get set}
-    
-    // on interactor did something
-    func interactorDidFetchGenres(with result : Result<[Genre],Error>)
-    
-    // on interactor did fetch discover movies
-    func interactorDidFetchDiscoverMovies(with result: Result<[Movie], Error>)
-    
-    // action that can triggered by view
-    func fetchDiscoverMovie(_ genreID: String)
-}
-
 class ListGenrePresenter : ListGenrePresenterContract{
     weak var view : ListGenreViewContract?
-    var interactor : ListGenreInteractorContract?{
-        didSet{
-            interactor?.getGenres()
-            interactor?.getDiscoverMovies("")
-        }
-    }
+    var interactor : ListGenreInteractorContract?
     var router : ListGenreRouterContract?
+    
+    var selectedMovieID: Int?
+    
+    init(view: ListGenreViewContract? = nil, interactor: ListGenreInteractorContract? = nil, router: ListGenreRouterContract? = nil) {
+        self.view = view
+        self.interactor = interactor
+        self.router = router
+        
+        self.interactor?.getGenres()
+        self.interactor?.getDiscoverMovies("")
+    }
     
     func interactorDidFetchGenres(with result: Result<[Genre], Error>) {
         
@@ -62,5 +48,8 @@ class ListGenrePresenter : ListGenrePresenterContract{
         }
     }
     
+    func goToDetailPage() {
+        self.router?.navigateToDetailPage(self.selectedMovieID)
+    }
     
 }

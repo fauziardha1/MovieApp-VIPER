@@ -7,21 +7,6 @@
 
 import Foundation
 
-// contract for interactor
-// reference to presenter to trigger presenter when some usecase was done
-// set all usecase needed
-
-protocol ListGenreInteractorContract {
-    // reference to presenter
-//     var presenter : ListGenrePresenterContract? {get set}
-    
-    // get list of genre
-    func getGenres()
-    
-    // get list of discover movies
-    func getDiscoverMovies(_ genreID: String)
-}
-
 class ListGenreInteractor : ListGenreInteractorContract{
     var presenter: ListGenrePresenterContract?
     
